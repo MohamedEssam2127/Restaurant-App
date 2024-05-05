@@ -1,15 +1,30 @@
-
-import { useEffect } from "react";
-import { ActivityIndicator, View } from "react-native";
-import { Link, router } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StyleSheet } from "react-native";
+import { SafeAreaView, TouchableOpacity, Text, View } from "react-native";
+import { router } from "expo-router";
 
 export default function Page() {
   return (
-    <View>
-      <Link href={"/home"}>Go to home press here</Link>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.logCard}>
+        <Text style={styles.text}>Are You Hungry?</Text>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.navigate("/account/login")}
+        >
+          <Text style={{ color: "#ffb01d", fontSize: 17 }}>Sign In</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.navigate("/account/register")}
+        >
+          <Text Text style={{ color: "#ffb01d", fontSize: 17 }}>
+            Register
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
