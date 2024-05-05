@@ -47,7 +47,6 @@ export default function Login() {
             onPress={() => router.back()}
           >
             <FontAwesome name="chevron-left" size={30} color="white" />
-            {/* </Link> */}
           </TouchableOpacity>
           <View style={styles.backUser}>
             <FontAwesome
