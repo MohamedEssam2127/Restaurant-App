@@ -9,7 +9,7 @@ import {
 import Items from "./Items";
 // import pizza from "../assets/images/Pizza-icon.png";
 // import fries from "../assets/images/images.png";
-export default function Categorys() {
+export default function Category() {
   const [list, setList] = useState([
     {
       title: "pizza Margarita",

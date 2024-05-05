@@ -1,7 +1,7 @@
 import { View, Text,TouchableOpacity, } from 'react-native'
 import React from 'react'
 import Items from '../../../components/Items'
-import Categorys from '../../../components/Categorys'
+import Category from '../../../components/Category'
 import { Stack } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons';
 export default function Products() {
@@ -27,7 +27,7 @@ export default function Products() {
           ),
         }}
       />
-     <Categorys/>
+     <Category/>
     </View>
   )
 }
