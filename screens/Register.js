@@ -115,6 +115,7 @@ export default function Register() {
       setValidPassword1(false);
       setValidPassword2(false);
       setValidAddress(false);
+      router.navigate("/home");
     } else {
       console.log("Failed");
     }

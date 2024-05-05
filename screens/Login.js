@@ -26,6 +26,7 @@ export default function Login() {
       console.log("Success");
       setPassword("");
       setUsername("");
+      router.navigate("/home");
     } else {
       console.log("Failed");
     }
