@@ -1,20 +1,16 @@
 import { View, Text,TouchableOpacity, } from 'react-native'
 import React from 'react'
-import Items from '../../../components/Items'
-import Category from '../../../components/Category'
-import { Stack, router, useGlobalSearchParams } from 'expo-router'
+import { Stack, useGlobalSearchParams } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome } from "@expo/vector-icons";
+import Item from '../../../components/Item'
 export default function Products() {
-  const { name } = useGlobalSearchParams();
-  console.log("xxxxxxx",name);
+  const { name, price } = useGlobalSearchParams();
   return (
-    <View>
+    <View style= {{flex:1}}>
        <Stack.Screen
         options={{
-          // https://reactnavigation.org/docs/headers#setting-the-header-title
-          title: name,
-          // https://reactnavigation.org/docs/headers#adjusting-header-styles
+          title: "item 1",
+          headerShown: false ,
           headerStyle: { backgroundColor: "#ffb01d" },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -24,13 +20,13 @@ export default function Products() {
           // https://reactnavigation.org/docs/headers#replacing-the-title-with-a-custom-component
           // headerTitle: props => <LogoTitle {...props} />,
           headerLeft: (props) => (
-            <TouchableOpacity onPress={()=>router.back()} >
-        <FontAwesome name="chevron-left" size={30} color="white"style={{paddingRight:10}} />
+            <TouchableOpacity  >
+         <MaterialIcons name="arrow-back-ios-new" size={24} color="white" />
         </TouchableOpacity>
           ),
         }}
       />
-     <Category/>
+     <Item name={name} price={price}/>
     </View>
   )
 }

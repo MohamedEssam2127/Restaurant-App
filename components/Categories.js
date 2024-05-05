@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
 import React from "react";
+import { router } from "expo-router";
 
 const Categories = () => {
     const foods = [
@@ -31,7 +32,10 @@ const Categories = () => {
             <View style={styles.all}>
                 {foods.map((item, index) => (
                     <View style={styles.search} key={index}>
-                        <TouchableOpacity style={styles.image}>
+                        <TouchableOpacity style={styles.image} onPress={()=>  router.push({
+        pathname: "home/products/", 
+        params: { name: item.name },
+      })}>
                             <Image source={{ uri: item.image }} style={styles.imageStyle} />
                         </TouchableOpacity>
                         <TouchableOpacity>

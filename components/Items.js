@@ -6,9 +6,15 @@ import { FontAwesome6 } from '@expo/vector-icons';
 export default function Items({ item }) {
   const [isHovered, setIsHovered] = useState(false);
   const [addCardHovered, setaddCardHovered] = useState(false);
+  //
   return (
     <TouchableOpacity
-    onPress={() => router.navigate(`/Items/${item.id}`)}
+    onPress={() =>
+      router.push({
+        pathname: "home/products/${item.id}", 
+        params: { name: item.title, price: item.price },
+      })
+    }
       style={[styles.card, isHovered && styles.hovered]}
       onPressIn={() => setIsHovered(true)}
       onPressOut={() => setIsHovered(false)}
