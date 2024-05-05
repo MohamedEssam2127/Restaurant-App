@@ -25,7 +25,7 @@ export default function Products() {
           ),
         }}
       />
-     <Category/>
+     <Category name={name}/>
     </View>
   )
 }

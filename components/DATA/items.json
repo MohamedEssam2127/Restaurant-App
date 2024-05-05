@@ -1,9 +1,110 @@
 [
+  {
+    "id": "110",
+    "name": "Daiya Vegan Mozzarella",
+    "description": "FILTERED WATER, TAPIOCA FLOUR, EXPELLER PRESSED NON-GMO CANOLA AND/OR SAFFLOWER OIL, COCONUT OIL, PEA PROTEIN, SALT, VEGAN NATURAL FLAVOURS, INACTIVE YEAST, VEGETABLE GLYCERIN, XANTHAN GUM, CITRIC ACID, TITANIUM DIOXIDE",
+    "category": "Pizza",
+    "price": 100
+  },{
+    "id": "111",
+    "name": "Spicy Tofu Pepperoni",
+    "description": "FILTERED WATER, WHEAT FLOUR, TOMATO PUREE, SOY-BASED MEAT ALTERNATIVE (WATER, SOY FLOUR, SOY PROTEIN CONCENTRATE, NATURAL FLAVORS, WHEAT GLUTEN, YEAST EXTRACT, SALT, ONION POWDER, GARLIC POWDER, SPICES), CANOLA OIL, ORGANIC AGAVE NECTAR, SEA SALT, CALCIUM CARBONATE, ONION POWDER, GARLIC POWDER, ITALIAN SEASONING (OREGANO, BASIL, THYME, ROSEMARY), RED PEPPER FLAKES, DRIED HIPPORYTHM",
+    "category": "Pizza",
+    "price": 120
+    },
     {
-        "id": 110,
-        "name": "Daiya Vegan Mozzarella",
-        "description": "FILTERED WATER, TAPIOCA FLOUR, EXPELLER PRESSED NON-GMO CANOLA AND/OR SAFFLOWER OIL, COCONUT OIL, PEA PROTEIN, SALT, VEGAN NATURAL FLAVOURS, INACTIVE YEAST, VEGETABLE GLYCERIN, XANTHAN GUM, CITRIC ACID, TITANIUM DIOXIDE",
-        "Category":"Pizza",
-        "price": 100
-    }
+    "id": "112",
+    "name": "BBQ Jackfruit",
+    "description": "FILTERED WATER, WHEAT FLOUR, BARBECUE SAUCE (TOMATO PUREE, BROWN SUGAR, DISTILLED VINEGAR, MOLASSES, HICKORY SMOKE FLAVOR, SALT, NATURAL FLAVORS, ONION POWDER, GARLIC POWDER, SPICES), JACKFRUIT, RED ONION, GREEN PEPPER, CANOLA OIL, ORGANIC AGAVE NECTAR, SEA SALT, CALCIUM CARBONATE, ONION POWDER, GARLIC POWDER",
+    "category": "Pizza",
+    "price": 115
+    },
+    {
+    "id": "113",
+    "name": "Margherita with Extra Virgin Olive Oil",
+    "description": "FILTERED WATER, WHEAT FLOUR, SAN MARZANO TOMATOES, EXTRA VIRGIN OLIVE OIL, SEA SALT, ORGANIC AGAVE NECTAR, DRIED OREGANO, GARLIC POWDER",
+    "category": "Pizza",
+    "price": 90
+    },{
+        "id": "201",
+        "name": "Black Bean Burger Patty",
+        "description": "BLACK BEANS, BROWN RICE, CORN, RED ONION, BELL PEPPER, CILANTRO, SPICES (CHIPOTLE PEPPER, CUMIN, GARLIC POWDER, SMOKED PAPRIKA), OAT FLOUR, FLAXSEED MEAL, OLIVE OIL, SALT",
+        "category": "Burger",
+        "price": 85
+      },
+      {
+        "id": "202",
+        "name": "Lentil Walnut Burger Patty",
+        "description": "COOKED BROWN LENTILS, WALNUTS, OATS, BREADCRUMBS, RED ONION, CARROTS, MUSHROOMS, SOY SAUCE, DIJON MUSTARD, WORCESTERSHIRE SAUCE (VEGAN VERSION), SPICES (SMOKED PAPRIKA, GARLIC POWDER, ONION POWDER, CAYENNE PEPPER), OLIVE OIL",
+        "category": "Burger",
+        "price": 90
+      },
+      {
+        "id": "203",
+     "name": "Beetroot Burger Patty",
+        "description": "GRATED BEETS, QUINOA, BLACK BEANS, CHICKPEA FLOUR, RED ONION, CRUMBL  ED FETA (VEGAN ALTERNATIVE), MINT, SPICES (CUMIN, CORIANDER, GARLIC POWDER), OLIVE OIL",
+        "category": "Burger",
+        "price": 95
+      },
+      {
+        "id": "204",
+        "name": "Classic Vegan Burger Patty",
+        "description": "SOY-BASED MEAT ALTERNATIVE (WATER, SOY FLOUR, SOY PROTEIN CONCENTRATE, NATURAL FLAVORS, WHEAT GLUTEN, YEAST EXTRACT, SALT, ONION POWDER, GARLIC POWDER, SPICES), LETTUCE, TOMATO, RED ONION, PICKLES, VEGAN MAYONNAISE, BUN",
+        "category": "Burger",
+        "price": 75
+      }, {
+        "id": "301",
+        "name": "Creamy Tomato Pasta with Vegan Sausage",
+        "description": "CRUSHED TOMATOES, PLANT-BASED MILK (e.g., SOY MILK, OAT MILK), VEGAN SAUSAGE (SOY OR LENTIL BASED), VEGAN PARMESAN CHEESE, GARLIC, ONION, SPICES (OREGANO, BASIL), PASTA",
+        "category": "Pasta",
+        "price": 95
+      },
+      {
+        "id": "302",
+        "description": "Roasted Vegetable Primavera",
+        "name": "BROCCOLI FLORETS, CHERRY TOMATOES, ZUCCHINI, RED ONION, GARLIC, OLIVE OIL, SPICES (ITALIAN SEASONING), PASTA",
+        "category": "Pasta",
+        "price": 80
+      },
+      {
+        "id": "303",
+        "name": "Lemon Garlic Pasta with Chickpeas",
+        "description": "COOKED CHICKPEAS, LEMON JUICE, GARLIC, OLIVE OIL, VEGAN BUTTER, PARSLEY, RED PEPPER FLAKES, PASTA",
+        "category": "Pasta",
+        "price": 85
+      }, {
+        "id": "401",
+        "name": "Classic Cola",
+        "description": "CARBONATED WATER, CARAMEL COLOR, NATURAL FLAVORS, PHOSPHORIC ACID, CITRIC ACID, CAFFEINE",
+        "category": "Soft Drink",
+        "price": 1.50
+      },
+      {
+        "id": "402",
+        "name": "Sparkling Lemon Water",
+        "description": "CARBONATED WATER, NATURAL LEMON FLAVOR, CITRIC ACID",
+        "category": "Soft Drink",
+        "price": 1.75
+      },
+      {
+        "id": "403",
+        "name": "Ginger Ale",
+        "description": "CARBONATED WATER, HIGH FRUCTOSE CORN SYRUP OR SUGAR, GINGER EXTRACT, CITRIC ACID, NATURAL FLAVORS",
+        "category": "Soft Drink",
+        "price": 1.50
+      },
+      {
+        "id": "404",
+        "name": "Berry Blast",
+        "description": "CARBONATED WATER, NATURAL BERRY FLAVORS, CITRIC ACID, POTASSIUM SORBATE (PRESERVATIVE)",
+        "category": "Soft Drink",
+        "price": 2.00
+      },
+      {
+        "id": "405",
+        "name": "Diet Cola",
+        "description": "CARBONATED WATER, CARAMEL COLOR, ARTIFICIAL FLAVORS, ASPARTAME (SWEETENER), ACESULFAME POTASSIUM (SWEETENER), CITRIC ACID",
+        "category": "Soft Drink",
+        "price": 1.50
+      }
 ]
