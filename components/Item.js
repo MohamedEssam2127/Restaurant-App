@@ -8,15 +8,28 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from "@expo/vector-icons";
 import pizza from "../assets/images/classic-cheese-pizza-recipe-2-64429a0cb408b.jpg";
 import { router } from "expo-router";
-export default function Item({name,price}) {
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/Config";
+export default function Item({id}) {
   const [ReadMore, setReadMore] = useState(false);
   const [counter,setcounter] = useState(1);
+  const [item,setItem]= useState({});
+  const fetItem=async()=>{
+    const docRef = doc(db, "Foods", id);
+    try {
+      const doc = await getDoc(docRef);
+      const data = doc.data();
+      setItem(data);
+    } catch (e) {
+      console.log("Error getting cached document:", e);
+    }
+  }
   const increaseCounter = ()=>{
     setcounter(counter+1);
   }
@@ -26,8 +39,10 @@ export default function Item({name,price}) {
     }
   
   } 
+  useEffect(()=>{
+    fetItem()
+  },[])
   return (
-    // <View style={styles.Container}>
     <SafeAreaView style={{flex:1}}>
       <ImageBackground source={pizza} style={styles.image} >
         <TouchableOpacity style= {styles.back} onPress={()=>router.back()}>
@@ -35,8 +50,8 @@ export default function Item({name,price}) {
         </TouchableOpacity>
         <View style={styles.Container}>
           
-      <Text style={styles.Header}> {name}</Text>
-      <Text style={styles.category}> Pizza</Text>
+      <Text style={styles.Header}> {item.name}</Text>
+      <Text style={styles.category}> {item.category}</Text>
       <ScrollView>
       <Text
         style={{
@@ -47,10 +62,7 @@ export default function Item({name,price}) {
         }}
         numberOfLines={ReadMore ? 20 : 3}
       >
-        gjgjgoibojopfgjopbfjiofibjfginjfgionjfgionjfgoiccccdfbjkndfjbnjfknbjkff
-        nf njnbjkdfndfkbnfdklbnklfnklfmfklbmkldfbmdfklbnklndfjklb bbbbbbbbbbbb
-        gjgjgoibojopfgjopbfjiofibjfginjfgionjfgionjfgoiccccdfbjkndfjbnjfknbjkffhh
-        jjj jjj jjjjj iiolhgjtkt
+        {item.description}
       </Text>
       <Pressable onPress={() => setReadMore(!ReadMore)}>
         <Text style={{ color: "#ffb01d", fontSize: 20, fontWeight: "500",marginLeft:8}}>
@@ -58,7 +70,7 @@ export default function Item({name,price}) {
         </Text>
       </Pressable>
       </ScrollView>
-      <Text style= {styles.price}> Toltle price {price *counter}$</Text>
+      <Text style= {styles.price}> Toltle price {item.price*counter}$</Text>
       <View
         style={{ display: "flex", flexDirection: "row", gap: 5, margin: 8,marginHorizontal:80 }}
       >

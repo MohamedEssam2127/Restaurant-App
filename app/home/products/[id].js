@@ -4,7 +4,7 @@ import { Stack, useGlobalSearchParams } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons';
 import Item from '../../../components/Item'
 export default function Products() {
-  const { name, price } = useGlobalSearchParams();
+  const { fid } = useGlobalSearchParams();
   return (
     <View style= {{flex:1}}>
        <Stack.Screen
@@ -17,8 +17,6 @@ export default function Products() {
             fontWeight: "bold",
             fontSize:30,
           },
-          // https://reactnavigation.org/docs/headers#replacing-the-title-with-a-custom-component
-          // headerTitle: props => <LogoTitle {...props} />,
           headerLeft: (props) => (
             <TouchableOpacity  >
          <MaterialIcons name="arrow-back-ios-new" size={24} color="white" />
@@ -26,7 +24,7 @@ export default function Products() {
           ),
         }}
       />
-     <Item name={name} price={price}/>
+     <Item id={fid}/>
     </View>
   )
 }

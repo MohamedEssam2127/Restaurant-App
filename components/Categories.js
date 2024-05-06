@@ -22,7 +22,7 @@ const Categories = () => {
         {
             id: "3",
             image: "https://i.redd.it/yyr6vtruhzbb1.jpg",
-            name: "Drinks",
+            name: "Soft Drink",
         }
     ];
 

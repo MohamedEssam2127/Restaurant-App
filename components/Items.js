@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Pressable, Image, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import  pizza from '../assets/images/classic-cheese-pizza-recipe-2-64429a0cb408b.jpg';
+import Pasta from '../assets/images/images.jpg';
 import { FontAwesome6 } from '@expo/vector-icons';
 export default function Items({ item }) {
   const [isHovered, setIsHovered] = useState(false);
   const [addCardHovered, setaddCardHovered] = useState(false);
-  //
   return (
     <TouchableOpacity
     onPress={() =>
       router.push({
-        pathname: "home/products/${item.id}", 
-        params: { name: item.title, price: item.price },
+        pathname: `home/products/${item.id}`, 
+        params: { fid:item.id },
       })
     }
       style={[styles.card, isHovered && styles.hovered]}
@@ -22,7 +22,7 @@ export default function Items({ item }) {
       <View style= {styles.Container}>
       <Image source={pizza} style={styles.image} />
       <View style ={styles.titleContainer}>
-    <Text style= {{fontWeight:'700',fontSize:18}}> {item.title}</Text>
+    <Text style= {{fontWeight:'700',fontSize:18}}> {item.name}</Text>
     <View  style ={styles.titleContainer}>
     <Text style ={{fontSize:20,marginRight:10,marginTop:3}}> {item.price}</Text>
       <TouchableOpacity style= {styles.addCart}>

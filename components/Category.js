@@ -1,61 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import Items from "./Items";
-// import pizza from "../assets/images/Pizza-icon.png";
-// import fries from "../assets/images/images.png";
-export default function Category({name}) {
-  const [render,setrender]= useState([]);
-  const [list, setList] = useState([
-    {
-      title: "pizza Margarita",
-      price: 100,
-      type: "Go Back to where it all began with the classic cheese and tomato base",
-      Category:"Pizza",
-      id:1,
-    },
-    {
-      title: " Burger 1",
-      price: 50,
-      Category:"Burger",
-      type: "Crispy, oven baked potato wedges",
-      // image: fries,
-      id:2,
-    },
-    {
-      title: "pizza Pepperoni",
-      price: 140,
-      Category:"Pizza",
-      type: "One of our all time specialties. A meaty feast of Pepperoni, Mushroom, Black Olives, mozzarella cheese and tomato sauce",
-     // image: pizza,
-      id:3,
-    },
-  ]);
-  // const filteredArray = list.filter(item => item.Category === name);
-  // setrender(filteredArray);
+import DATA from "./DATA/items.json";
+import {
+  where,
+  collection,
+  query,
+  getDocs,
+  setDoc,
+  doc,
+} from "firebase/firestore";
+import { db } from "../firebase/Config";
+
+export default function Category({ name }) {
+  const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getDataFromFireBase();
+  }, []);
+
+  const getDataFromFireBase = async () => {
+    const q = query(collection(db, "Foods"), where("category", "==", name));
+    const querySnapshot = await getDocs(q);
+    const Data = querySnapshot.docs.map((doc) => doc.data());
+    setList(Data);
+    setLoading(false);
+  };
+
   return (
     <>
-      <FlatList
-        data={list}
-        renderItem={({ item }) => {
-          return (
-            <View style={styles.container}>
-              <Items item={item} />
-            </View>
-          );
-        }}
-      />
+      {loading ? (
+        <View style={[styles.container, styles.loadingContainer]}>
+          <ActivityIndicator size="large" color="#ffb01d" style={styles.ActivityIndicator} />
+        </View>
+      ) : (
+        <FlatList
+          data={list}
+          renderItem={({ item }) => {
+            return (
+              <View style={styles.container}>
+                <Items item={item} />
+              </View>
+            );
+          }}
+        />
+      )}
     </>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "row",
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  ActivityIndicator:{
+    flex:1,
+    justifyContent:'center',
+    alignContent:'center',
+    marginTop:'40%',
+    size:100,
+  }
 });
