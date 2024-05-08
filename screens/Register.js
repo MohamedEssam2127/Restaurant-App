@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator
 } from "react-native";
 import { router } from "expo-router";
 
@@ -12,6 +13,7 @@ import { useState } from "react";
 import Input from "./../components/Input";
 import InputPass from "./../components/PassInput";
 import { FontAwesome } from "@expo/vector-icons";
+import { register, addUser } from "../firebase/auth";
 
 export default function Register() {
   const [userName, setUserName] = useState("");
@@ -26,9 +28,11 @@ export default function Register() {
   const [validPassword1, setValidPassword1] = useState(false);
   const [password2, setPassword2] = useState("");
   const [validPassword2, setValidPassword2] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const vUserName = (userName) => {
-    const v = userName.nativeEvent.text;
+    const v = userName.nativeEvent.text.trim();
     setUserName(v);
     if (v.length > 5) {
       setValidUserName(true);
@@ -39,7 +43,7 @@ export default function Register() {
   };
 
   const vEmail = (email) => {
-    const v = email.nativeEvent.text;
+    const v = email.nativeEvent.text.trim();
     setEmail(v);
     if (/[^\s@]+@[^\s@]+\.[^\s@]+/.test(v)) {
       setValidEmail(true);
@@ -50,7 +54,7 @@ export default function Register() {
   };
 
   const vPhone = (phone) => {
-    const v = phone.nativeEvent.text;
+    const v = phone.nativeEvent.text.trim();
     setPhone(v);
     if (
       /^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$/i.test(
@@ -66,13 +70,18 @@ export default function Register() {
   };
 
   const vAddress = (add) => {
-    const v = add.nativeEvent.text;
+    const v = add.nativeEvent.text.trim();
     setAddress(v);
-    setValidAddress(true);
+    if(v.length){
+      setValidAddress(true);
+    }else{
+      setValidAddress(false);
+    }
+      
   };
 
   const vPassword1 = (pass) => {
-    const v = pass.nativeEvent.text;
+    const v = pass.nativeEvent.text.trim();
     setPassword1(v);
     if (v.length > 7) {
       setValidPassword1(true);
@@ -83,7 +92,7 @@ export default function Register() {
   };
 
   const vPassword2 = (pass) => {
-    const v = pass.nativeEvent.text;
+    const v = pass.nativeEvent.text.trim();
     setPassword2(v);
     if (v === password1 && v.length > 7) {
       setValidPassword2(true);
@@ -93,31 +102,57 @@ export default function Register() {
     }
   };
 
-  const handleSend = () => {
-    if (
-      validUserName &&
-      validEmail &&
-      validPassword1 &&
-      validPassword2 &&
-      validPhone &&
-      validAddress
-    ) {
-      console.log("Success");
-      setUserName("");
-      setEmail("");
-      setPhone("");
-      setAddress("");
-      setPassword1("");
-      setPassword2("");
-      setValidUserName(false);
-      setValidEmail(false);
-      setValidPhone(false);
-      setValidPassword1(false);
-      setValidPassword2(false);
-      setValidAddress(false);
-      router.navigate("/home");
-    } else {
-      console.log("Failed");
+  const handleSend = async () => {
+    try {
+      const isValid = validUserName && validEmail && validPassword1 && validPassword2 && validPhone && validAddress;
+  
+      if (isValid) {
+        setLoading(true);
+  
+        try {
+          setLoading(false);
+          const credentials = await register(email, password2);
+          console.log(credentials);
+  
+          await addUser(credentials.user.uid, credentials.user.email, userName, phone, address);
+        
+          setUserName("");
+          setEmail("");
+          setPhone("");
+          setAddress("");
+          setPassword1("");
+          setPassword2("");
+          setValidUserName(false);
+          setValidEmail(false);
+          setValidPhone(false);
+          setValidPassword1(false);
+          setValidPassword2(false);
+          setValidAddress(false);
+          router.navigate("/home");
+        } catch (addUserError) {
+
+          if(addUserError.code === "auth/invalid-email"){
+            console.log("this email is invalid");
+            setError("this email is invalid");
+          }else if(addUserError.code === "auth/email-already-in-use"){
+            console.error("this email used before");
+            setError("this email used before");
+          }else{
+            console.error('Error adding user:', JSON.stringify(addUserError));
+            setError("something goes wrong try again later");
+          }
+          setLoading(true);
+          return;
+        }
+      } else {
+        setError("Invalid field(s). Please check your input.");
+        setLoading(true);
+      }
+    } catch (error) {
+      console.error('Registration error:', JSON.stringify(error));
+      setError("An error occurred during registration. Please try again later.");
+      setLoading(true);
+      return
     }
   };
 
@@ -208,8 +243,15 @@ export default function Register() {
             <Text style={{ fontSize: 12 }}>not match or invalid password</Text>
           )}
 
+          {error.length < 1 ? null : <Text style={{ fontSize: 12, color: 'red' }}> { error } </Text>}
+
           <TouchableOpacity style={styles.button} onPress={() => handleSend()}>
-            <Text style={{ color: "#ffb01d", fontSize: 17 }}>Sign Up</Text>
+            {!loading? <ActivityIndicator size={'small'} color={'#ffb01d'}/>  : <Text
+              style={{ color: "#ffb01d", fontSize: 17 }}
+            >
+              Register
+             </Text>
+            }
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.navigate("/account/login")}>
             <Text style={{ color: "white", fontWeight: "bold" }}>
