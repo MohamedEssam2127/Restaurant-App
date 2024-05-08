@@ -4,29 +4,11 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
-  confirmPasswordReset,
-  signInWithCredential,
-  FacebookAuthProvider,
   signOut,
 } from "firebase/auth";
 
-import {
-  getDocs,
-  doc,
-  setDoc,
-  addDoc,
-  deleteDoc,
-  collection,
-  query,
-  where,
-  onSnapshot,
-  getDoc,
-  QuerySnapshot,
-  Timestamp,
-  orderBy,
-  updateDoc,
-
-} from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 onAuthStateChanged(auth, (user) => {
   if (user != null) {
@@ -37,19 +19,19 @@ onAuthStateChanged(auth, (user) => {
 });
 
 async function register(email, password) {
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
-    return cred;
+  const cred = await createUserWithEmailAndPassword(auth, email, password);
+  return cred;
 }
 
 async function addUser(uid, email, username, phone, address) {
-  const data  = {
+  const data = {
     uid: uid,
     email: email,
     username: username,
     phone: phone,
     address: address,
     isAdmin: false,
-  }
+  };
   try {
     await setDoc(doc(db, "users", uid), data);
     console.log("Document written with ID: ", uid);
@@ -58,6 +40,18 @@ async function addUser(uid, email, username, phone, address) {
   }
 }
 
+async function login(email, password) {
+  const user = await signInWithEmailAndPassword(auth, email, password);
+  return user;
+}
 
+async function logout() {
+  await signOut(auth);
+  await AsyncStorage.removeItem("@user");
+}
 
-export { register, addUser };
+async function changePass(email) {
+  await sendPasswordResetEmail(auth, email);
+}
+
+export { register, addUser, login, changePass, logout };
