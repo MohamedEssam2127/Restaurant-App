@@ -1,9 +1,15 @@
-import { Text, View, TouchableOpacity, StyleSheet, ActivityIndicator, TextInput } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, ActivityIndicator, TextInput, Pressable } from "react-native";
 import { Stack, router } from "expo-router";
 import HomeScreen from "../../screens/HomeScreen";
 import { AntDesign } from '@expo/vector-icons';
+import { logout } from "../../firebase/auth";
 
 export default function Page() {
+
+  const logo = () => {
+    logout();
+    router.replace("/account/login");
+  }
   
   return (
     <View style={styles.upper}>
@@ -32,6 +38,9 @@ export default function Page() {
 
 
       <HomeScreen/>
+      <TouchableOpacity onPress={() => logo()}>
+        <Text>LogOut</Text>
+      </TouchableOpacity>
     </View>
   );
 }
