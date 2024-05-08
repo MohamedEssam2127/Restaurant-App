@@ -11,6 +11,7 @@ export default function Page() {
         <TouchableOpacity
           style={styles.button}
           onPress={() => router.navigate("/account/login")}
+          
         >
           <Text style={{ color: "#ffb01d", fontSize: 17 }}>Sign In</Text>
         </TouchableOpacity>
