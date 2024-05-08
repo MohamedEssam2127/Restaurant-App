@@ -1,34 +1,73 @@
 import { ScrollView, StyleSheet } from "react-native";
-import { SafeAreaView, TouchableOpacity, Text, View } from "react-native";
+import {
+  SafeAreaView,
+  TouchableOpacity,
+  Text,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import React, { useState } from "react";
 import Input from "./../components/Input";
 import InputPass from "./../components/PassInput";
 import { FontAwesome } from "@expo/vector-icons";
+import { login, changePass } from "../firebase/auth";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [message, setMessage] = useState("");
+  const [sent, setSent] = useState(false);
 
-  const handleUser = (user) => {
-    const v = user.nativeEvent.text;
-    setUsername(v);
+  const handleEmail = (email) => {
+    const v = email.nativeEvent.text.trim();
+    setEmail(v);
+    setIsError(false);
   };
 
   const handlePassword = (pass) => {
-    const v = pass.nativeEvent.text;
+    const v = pass.nativeEvent.text.trim();
     setPassword(v);
+    setIsError(false);
   };
 
-  const handleSend = () => {
-    if (username.length !== 0 && password.length !== 0) {
-      console.log("Success");
-      setPassword("");
-      setUsername("");
-      router.navigate("/home");
+  const handleLogin = async () => {
+    if (email.length !== 0 && password.length !== 0) {
+      try {
+        setLoading(false);
+        const credentials = await login(email, password);
+        await AsyncStorage.setItem("@user", JSON.stringify(credentials.user));
+        setSent(true);
+        setLoading(true);
+        setPassword("");
+        setEmail("");
+        router.replace(`/home`);
+      } catch (error) {
+        console.log("error", JSON.stringify(error));
+        setError("Invalid email or password");
+        setLoading(true);
+        setIsError(true);
+      }
     } else {
-      console.log("Failed");
+      setError("Invalid field(s). Please check your input.");
+      setIsError(true);
+    }
+  };
+
+  const handleChangePass = async () => {
+    try {
+      await changePass(email);
+      setIsError(false);
+      setMessage("Check your email box!");
+      setSent(true);
+    } catch (error) {
+      console.log("error", JSON.stringify(error));
+      setError("invalid email");
     }
   };
 
@@ -60,8 +99,8 @@ export default function Login() {
           <Input
             type={false}
             iconImg={"user"}
-            text={"Enter Your Username..."}
-            handleInput={handleUser}
+            text={"Enter Your Email..."}
+            handleInput={handleEmail}
             checkImg={undefined}
           />
           <InputPass
@@ -73,12 +112,27 @@ export default function Login() {
             style={{ margin: 4 }}
             onPress={() => console.log("OK")}
           >
-            <TouchableOpacity>
-              <Text style={{ color: "white" }}>Forgot password?</Text>
-            </TouchableOpacity>
+            {sent ? (
+              <TouchableOpacity onPress={() => handleChangePass()}>
+                <Text style={{ color: "white" }}>
+                  {message} here to resend email
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => handleChangePass()}>
+                <Text style={{ color: "white" }}>Forgot password?</Text>
+              </TouchableOpacity>
+            )}
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => handleSend()}>
-            <Text style={{ color: "#ffb01d", fontSize: 17 }}>Sign In</Text>
+          {isError ? (
+            <Text style={{ fontSize: 12, color: "red" }}> {error} </Text>
+          ) : null}
+          <TouchableOpacity style={styles.button} onPress={() => handleLogin()}>
+            {!loading ? (
+              <ActivityIndicator size={"small"} color={"#ffb01d"} />
+            ) : (
+              <Text style={{ color: "#ffb01d", fontSize: 17 }}>LogIn</Text>
+            )}
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => router.navigate("/account/register")}

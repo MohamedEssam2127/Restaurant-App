@@ -1,8 +1,37 @@
 import { StyleSheet } from "react-native";
 import { SafeAreaView, TouchableOpacity, Text, View } from "react-native";
 import { router } from "expo-router";
+import { useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase/Config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Page() {
+
+  const checkLoginStatus = async () => {
+    try {
+      const u = await AsyncStorage.getItem("@user");
+      if (u) {
+        const isLoggedIn = await auth.onAuthStateChanged(
+          (user) => user !== null
+        );
+        if (isLoggedIn) {
+          console.log("User is logged in");
+          router.navigate(`/home`);
+        } else {
+          await AsyncStorage.removeItem("@user");
+        }
+      } else {
+        console.log("User is not logged in");
+      }
+    } catch (error) {
+      console.error("Error checking login status:", error);
+    }
+  };
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logCard}>
