@@ -25,7 +25,7 @@ export default function Items({ item }) {
     <Text style= {{fontWeight:'700',fontSize:18}}> {item.name}</Text>
     <View  style ={styles.titleContainer}>
     <Text style ={{fontSize:20,marginRight:10,marginTop:3}}> {item.price}</Text>
-      <TouchableOpacity style= {styles.addCart}>
+      <TouchableOpacity style= {styles.addCart} onPress={()=>router.push('home/AddToCart')}>
       <FontAwesome6 name="cart-shopping" size={18} color="white" />
       </TouchableOpacity>
    
@@ -33,7 +33,7 @@ export default function Items({ item }) {
    
     </View>
     <View style = {styles.about}>
-      <Text style={{color:'gray',marginBottom:30}}>fast food pizza ,burger ,</Text>
+      <Text style={{color:'gray',marginBottom:30}}>fast food {item.category}</Text>
       <Text>20% Off</Text>
     </View>
       </View>
@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 16,
     elevation: 5,
-    fontFamily: "Arial",
   },
   hovered: {
     backgroundColor: "#67e8f9",

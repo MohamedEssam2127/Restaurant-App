@@ -97,7 +97,7 @@ export default function Item({id}) {
       <View
         style={{ display: "flex", flexDirection: "row", gap: 5, margin: 8 }}
       >
-        <TouchableOpacity style={styles.Bookbtn}>
+        <TouchableOpacity style={styles.Bookbtn} onPress={()=>router.push('home/AddToCart')}>
           <Text
             style={{
               textAlign: "center",
