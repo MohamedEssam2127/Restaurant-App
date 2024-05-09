@@ -13,6 +13,7 @@ import AddItem from '../../components/AddItem';
 export default function Products() {
   const { name } = useGlobalSearchParams();
   let x;
+  const [flag, setFlag] = useState(false);
   const [item, setItem] = useState({});
   const getUser = async () => {
     const uid = JSON.parse(await AsyncStorage.getItem("@user")).uid;
@@ -27,7 +28,7 @@ export default function Products() {
       const doc = await getDoc(docRef);
       const data = doc.data();
       setItem(data);
-      setFlag(true);
+      setFlag(data.isAdmin);
     } catch (e) {
       console.log("Error getting cached document:", e);
     }
@@ -54,9 +55,9 @@ export default function Products() {
           headerRight:()=>(
             <>
             
-            {!item.isAdmin?( <View style={{right:'45%'}} >
+            {flag?(<></> ):( <View style={{right:'65%'}} >
     <AddItem Category={name}/>
-            </View>):( <></>)}
+            </View>)}
           
             </>
           )

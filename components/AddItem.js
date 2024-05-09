@@ -14,17 +14,23 @@ import { firebase } from '../firebase/Config';
 import "firebase/storage";
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
-import Icon from '@expo/vector-icons/MaterialIcons';
+import Icon from '@expo/vector-icons/FontAwesome6';
+import Cancel from '@expo/vector-icons/MaterialIcons';
+
+import { setDoc, addDoc, collection,doc ,updateDoc} from "firebase/firestore";
+import { db } from "../firebase/Config";
 
 
-export default function AddItem() {
+export default function AddItem({ Category }) {
     const [image, setImage] = useState(null);
     const [url, setUrl] = useState("");
     const [loading, setUploading] = useState(false);
     const [isVisible, setVisible] = useState(false);
-    const [newName, setNewName] = useState("");
-    const [newPrice, setNewPrice] = useState("");
-    const [newDesc, setNewDesc] = useState("");
+    const [newName, setNewName] = useState(null);
+    const [newPrice, setNewPrice] = useState(null);
+    const [newDesc, setNewDesc] = useState(null);
+    const [iserr, setIsError] = useState(false);
+
 
     const pickImage = async () => {
         try {
@@ -51,7 +57,7 @@ export default function AddItem() {
             const filename = uri.substring(uri.lastIndexOf("/") + 1);
             const ref = firebase.storage().ref().child(filename);
             await ref.put(blob);
-            setUrl(await ref.getDownloadURL());
+            setUrl( await ref.getDownloadURL());
             console.log("Download URL:", url);
             Alert.alert("Upload Completed");
             // setImage(null);
@@ -63,14 +69,48 @@ export default function AddItem() {
         }
     };
 
+    const handleAdding = async () => {
+        if (newName === null || newPrice === null || newDesc === null||image===null) {
+            setIsError(true);
+        }
+        else {
+            const food = {
+                category: Category,
+                name: newName,
+                price: newPrice,
+                description: newDesc,
+                photo: url
+            }
+            try {
+                const xf = await addDoc(collection(db, 'Foods'), food);
+                const setID = doc(db, `Foods`, xf.id);
+                const updateData = {
+                id: xf.id,
+                };
+
+                try {
+                await updateDoc(setID, updateData, { merge: true });
+                console.log("Completed updated successfully!");
+                } catch (error) {
+                console.error("Error updating completed:", error);
+                }
+
+                console.log("Document updated with its own ID");
+                Alert.alert("Added!")
+              } catch (error) {
+                console.error("Error adding or updating document:", error);
+              }
+            setIsError(false);
+        }
+    }
+
     return (
         <View style={styles.container}>
             <TouchableOpacity
                 onPress={() => setVisible(true)}
-                style={{  top: "10%", left: "85%" }}
+                style={{ top: "10%", left: "93%" }}
             >
-                {/* <Image source={addImg} style={styles.Img} /> */}
-                <Icon name="add-circle" size={40} style={styles.Img}/>
+                <Icon name="circle-plus" size={40} style={styles.Img} />
             </TouchableOpacity>
 
             <Modal visible={isVisible} animationType="slide">
@@ -88,12 +128,12 @@ export default function AddItem() {
                             Add New Food
                         </Text>
                         <TouchableOpacity
-                            style={{ width: 0, height: 50, marginLeft: 90,top:'2%' }}
+                            style={{ width: 0, height: 50, marginLeft: 90, top: '2%' }}
                             onPress={() => {
                                 setVisible(false);
                             }}
                         >
-                            <Icon name="cancel" size={40} style={styles.Img}/>
+                            <Cancel name="cancel" size={40} style={styles.Img} />
 
                             {/* <Image source={cancel} style={styles.Img} /> */}
                         </TouchableOpacity>
@@ -121,31 +161,26 @@ export default function AddItem() {
                             onChangeText={(text) => setNewPrice(text)}
                             keyboardType="numeric"
                         />
-
-                        {/* <TextInput
-                            placeholder="Image Url..."
-                            style={styles.textInput}
-                            value={newImg}
-                            onChangeText={(text) => setNewImg(text)}
-                        /> */}
-
+                    <View style={{flexDirection:'row'}}>
                         <TouchableOpacity style={styles.imgBut} onPress={() => { pickImage() }}>
                             <Text style={{ color: "white", fontSize: 15, fontWeight: "500" }}>
-                                Pick Photo From Gallery
+                                Pick Photo
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.imgBut} onPress={() => { uploadImage() }}>
                             <Text style={{ color: "white", fontSize: 15, fontWeight: "500" }}>
-                                Upload
+                            upload Photo
                             </Text>
                         </TouchableOpacity>
+                    </View>
 
 
-                        <TouchableOpacity style={styles.submit}>
+                        <TouchableOpacity style={styles.submit} onPress={() =>  handleAdding() }>
                             <Text style={{ color: "white", fontSize: 15, fontWeight: "500" }}>
                                 Add Food
                             </Text>
                         </TouchableOpacity>
+                        {iserr ? <Text style={{marginTop:2,color:'red'}}>Fill all Fields!</Text> : null}
                     </View>
                 </View>
             </Modal>
@@ -203,7 +238,8 @@ const styles = StyleSheet.create({
     },
     imgBut: {
         backgroundColor: "#121312",
-        width: "80%",
+        width: "39%",
+        marginRight:5,
         height: 70,
         borderRadius: 15,
         borderWidth: 0.5,
