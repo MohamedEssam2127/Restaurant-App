@@ -14,7 +14,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from "@expo/vector-icons";
 import pizza from "../assets/images/classic-cheese-pizza-recipe-2-64429a0cb408b.jpg";
 import { router } from "expo-router";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc ,setDoc,} from "firebase/firestore";
 import { db } from "../firebase/Config";
 export default function Item({id}) {
   const [ReadMore, setReadMore] = useState(false);
@@ -37,8 +37,15 @@ export default function Item({id}) {
     if(counter>1){
       setcounter(counter-1);
     }
-  
   } 
+  const AddToCart= async()=>{
+    await setDoc(doc(db, "At_ToCart", id), {
+      name: item.name,
+      price: item.price,
+      counter: counter,
+      id:item.id
+    });
+  }
   useEffect(()=>{
     fetItem()
   },[])
@@ -97,7 +104,7 @@ export default function Item({id}) {
       <View
         style={{ display: "flex", flexDirection: "row", gap: 5, margin: 8 }}
       >
-        <TouchableOpacity style={styles.Bookbtn}>
+        <TouchableOpacity style={styles.Bookbtn} onPress={AddToCart}>
           <Text
             style={{
               textAlign: "center",
