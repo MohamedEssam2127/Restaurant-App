@@ -12,7 +12,7 @@ export default function Page() {
   
   return (
     <View style={styles.upper}>
-      {/* <Stack.Screen
+      <Stack.Screen
         options={{
           title : "Home",
           headerStyle: { backgroundColor: "#ffb01d" },
@@ -29,10 +29,10 @@ export default function Page() {
        
           // <AntDesign name="search1" size={24} color="black" />
         )
-        <FontAwesome size={28} name="home" color={color} />
+        
         }}
         
-      /> */}
+      />
 
 
 <Tabs.Screen
