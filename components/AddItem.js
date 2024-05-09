@@ -16,8 +16,6 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import Icon from '@expo/vector-icons/MaterialIcons';
 
-const addImg = require("../assets/plus.png");
-const cancel = require("../assets/cancel.png");
 
 export default function AddItem() {
     const [image, setImage] = useState(null);
@@ -158,7 +156,6 @@ export default function AddItem() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
         // alignItems: 'center',
         // justifyContent: 'center',
     },
