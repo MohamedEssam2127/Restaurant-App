@@ -4,6 +4,8 @@ import HomeScreen from "../../screens/HomeScreen";
 import { AntDesign } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+
 
 
 export default function Page() {
@@ -44,13 +46,18 @@ export default function Page() {
             fontWeight: "bold",
             fontSize:30,
           },
+          headerTitle: () => (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <FontAwesome5 name="home" size={24} color="white" />
+              <Text style={{ fontWeight: 'bold', fontSize: 30, color: '#fff', marginLeft: 10 }}>
+                Cart
+              </Text>
+            </View>
+          ),
           headerTitleAlign: 'center',
      }}
    />
       <HomeScreen/>
-      <TouchableOpacity onPress={() => router.navigate('/home/profile')}>
-        <Text>Profile</Text>
-      </TouchableOpacity>
     </View>
   );
 }

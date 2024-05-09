@@ -27,8 +27,10 @@ const Categories = () => {
     ];
 
     return (
-        <View style={styles.container}>
+        <View> 
             <Text style={styles.text}>Categories</Text>
+        <View style={styles.container}>
+           
             <View style={styles.all}>
                 {foods.map((item, index) => (
                     <View style={styles.search} key={index}>
@@ -44,6 +46,7 @@ const Categories = () => {
                     </View>
                 ))}
             </View>
+        </View>
         </View>
     );
 };

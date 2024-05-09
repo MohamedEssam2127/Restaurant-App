@@ -42,6 +42,14 @@ export default function index() {
         fontWeight: "bold",
         fontSize:30,
       },
+      headerTitle: () => (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Entypo name="shopping-cart" size={24} color="white" />
+          <Text style={{ fontWeight: 'bold', fontSize: 30, color: '#fff', marginLeft: 10 }}>
+            Cart
+          </Text>
+        </View>
+      ),
       headerTitleAlign: 'center'
      }}
    />
