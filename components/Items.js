@@ -11,7 +11,7 @@ export default function Items({ item }) {
     <TouchableOpacity
     onPress={() =>
       router.push({
-        pathname: `home/products/${item.id}`, 
+        pathname: `products/${item.id}`, 
         params: { fid:item.id },
       })
     }
@@ -25,7 +25,7 @@ export default function Items({ item }) {
     <Text style= {{fontWeight:'700',fontSize:16}}> {item.name}</Text>
     <View  style ={styles.titleContainer}>
     <Text style ={{fontSize:20,marginRight:10,marginTop:3}}> {item.price}</Text>
-      <TouchableOpacity style= {styles.addCart} onPress={()=>router.push('home/AddToCart')}>
+      <TouchableOpacity style= {styles.addCart} onPress={()=>router.push('home/cart')}>
       <FontAwesome6 name="cart-shopping" size={18} color="white" />
       </TouchableOpacity>
    
