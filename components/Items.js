@@ -1,13 +1,21 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Pressable, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Pressable, Image, TouchableOpacity,TextInput } from "react-native";
 import { router } from "expo-router";
 import  pizza from '../assets/images/classic-cheese-pizza-recipe-2-64429a0cb408b.jpg';
 import Pasta from '../assets/images/images.jpg';
 import { FontAwesome6 } from '@expo/vector-icons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 export default function Items({ item }) {
   const [isHovered, setIsHovered] = useState(false);
   const [addCardHovered, setaddCardHovered] = useState(false);
+
+  const searchItems = (searchFor) => {
+    console.log('searchFor', searchFor);
+    setItems(DATA.filter((item) => item.text.includes(searchFor) ));
+  }; 
   return (
+    <>
+  
     <TouchableOpacity
     onPress={() =>
       router.push({
@@ -39,6 +47,7 @@ export default function Items({ item }) {
       </View>
     
     </TouchableOpacity>
+    </>
   );
 }
 
