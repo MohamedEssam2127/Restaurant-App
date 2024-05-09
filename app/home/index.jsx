@@ -2,12 +2,15 @@ import { Text, View, TouchableOpacity, StyleSheet, ActivityIndicator, TextInput,
 import { Stack, router } from "expo-router";
 import HomeScreen from "../../screens/HomeScreen";
 import { AntDesign } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+
 
 export default function Page() {
   
   return (
     <View style={styles.upper}>
-      <Stack.Screen
+      {/* <Stack.Screen
         options={{
           title : "Home",
           headerStyle: { backgroundColor: "#ffb01d" },
@@ -24,13 +27,26 @@ export default function Page() {
        
           // <AntDesign name="search1" size={24} color="black" />
         )
-        
+        <FontAwesome size={28} name="home" color={color} />
         }}
         
-      />
+      /> */}
 
 
-
+<Tabs.Screen
+     
+     options={{
+       title: 'Home',
+       tabBarIcon: () =>  <FontAwesome size={28} name="home" color={'#ffb01d'} />,
+       headerStyle: { backgroundColor: "#ffb01d" },
+       headerTintColor: "#fff",
+       headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize:30,
+          },
+          headerTitleAlign: 'center',
+     }}
+   />
       <HomeScreen/>
       <TouchableOpacity onPress={() => router.navigate('/home/profile')}>
         <Text>Profile</Text>
