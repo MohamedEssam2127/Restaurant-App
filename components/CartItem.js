@@ -1,28 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { db } from "../firebase/Config";
 import pizza from "../assets/images/classic-cheese-pizza-recipe-2-64429a0cb408b.jpg";
-export default function CartItem() {
-
-    const [counter, setcounter] = useState(1);
-    const increaseCounter = () => {
+import { deleteDoc, doc,updateDoc } from "firebase/firestore";
+export default function CartItem({item}) {
+    const [counter, setcounter] = useState(item.counter);
+    const [flag,setFlag]=useState(item);
+    const frankDocRef = doc(db, "At_ToCart", item.id);
+    const increaseCounter =  () => {
       setcounter(counter + 1);
     };
     const decreaseCounter = () => {
-      if (counter > 1) {
+      if (counter >1) {
         setcounter(counter - 1);
+      }else if(counter ===1){
+        handleDelete();
       }
     };
+    const handleDelete = async()=>{
+      await deleteDoc(doc(db, "At_ToCart",item.id ));
+      
+    }
+    useEffect(()=>{
+      const x = async()=>{
+        await updateDoc(frankDocRef, {
+          counter:counter
+      });
+      }
+      x();
+    },[counter])
   return (
     <View style={styles.item}>
         <Image source={pizza} style={styles.image} />
         <View style={styles.subcontainer}>
-          <View style={{ paddingLeft: 10 }}>
-            <Text style={styles.ProductName}>Product 1</Text>
-            <Text style={styles.price}> price 100$</Text>
+          <View style={{ paddingLeft: 10,width:'50%' }}>
+            <Text style={styles.ProductName}>{item.name}</Text>
+            <Text style={styles.price}> price {item.price *counter}$</Text>
           </View>
           <View style={styles.messagebtn}>
             <TouchableOpacity onPress={increaseCounter}>
@@ -43,7 +60,10 @@ export default function CartItem() {
             </TouchableOpacity>
           </View>
           <View style={{marginTop:50}}>
-          <MaterialCommunityIcons name="delete" size={40} color="black"  />
+            <TouchableOpacity onPress={handleDelete}>
+            <MaterialCommunityIcons name="delete" size={40} color="black"  />
+            </TouchableOpacity>
+          
         </View>
           </View>
          
@@ -53,11 +73,8 @@ export default function CartItem() {
 
 const styles = StyleSheet.create({
     container: {
-      // marginTop:100,
-      //   flex:1,
     },
     item: {
-      //display:'flex',
       paddingBottom: 26,
       margin: 10,
       borderRadius: 10,
@@ -71,7 +88,7 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
     },
     ProductName: {
-      fontSize: 30,
+      fontSize: 20,
       fontWeight: "700",
     },
     price: {
