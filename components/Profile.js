@@ -19,12 +19,14 @@ import { doc,
   query,
   where,
   getDocs,
-  addDoc } from "firebase/firestore";
+  addDoc,updateDoc } from "firebase/firestore";
   import { logout } from "../firebase/auth";
 
 import { db } from "../firebase/Config";
 
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { set } from "firebase/database";
+import { transpileModule } from "typescript";
 // import lemon from "../assets/photo.png";
 // import mango from "../assets/mango.jpg";
 export default function Profile() {
@@ -37,41 +39,94 @@ export default function Profile() {
   const [validPhone, setValidPhone] = useState(false);
 
   const [password, setPassword] = useState("");
+
   const [location, setLocation] = useState("");
   const [userName1, setUserName] = useState("");
   const [validUserName, setValidUserName] = useState(false);
-  const [error, setError] = useState("");
+  const [isError, setisError] = useState(false);
   const [flag, setflag] = useState(false);
 
+  const fun =() => {
+    if(isVisible){
+      setUserName(userData.username);
+      setPhone(userData.phone);
+      setLocation(userData.address);
+      setValidUserName(true);
+      setValidPhone(true);
+      setisError(false);
+    }
 
-  // const vPhone = (phone) => {
-  //   const v = phone.nativeEvent.text;
-  //   setPhone(v);
-  //   if (
-  //     /^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$/i.test(
-  //       v
-  //     ) &&
-  //     v.length === 11
-  //   ) {
-  //     setValidPhone(true);
-  //     setPhone(v);
-  //   } else {
-  //     setValidPhone(false);
-  //   }
-  // };
+  }
 
-  // const vUserName = (name) => {
-  //   console.log(name);
-  //   const v = name.nativeEvent.text;
-  //   console.log(v);
-  //   setUserName(v);
-  //   if (v.length > 5) {
-  //     setValidUserName(true);
-  //     setUserName(v);
-  //   } else {
-  //     setValidUserName(false);
-  //   }
-  // };
+
+const editProfile = async ()=>{
+  if(userName1===userData.username&&phone===userData.phone&&location===userData.address){
+setisError(true);
+
+  }
+  else if(validUserName&&validPhone&&location.length!==0) 
+    {
+      setisError(false);
+      const uid = JSON.parse( await AsyncStorage.getItem("@user")).uid;
+      const docRef = doc(db,'users', uid);
+
+      const updateProfile={
+        username:userName1,phone:phone,address:location
+      }
+      try {
+        await updateDoc(docRef, updateProfile, { merge: true });
+        console.log("Completed updated successfully!");
+        setVisible(false);
+      } catch (error) {
+        console.error("Error updating completed:", error);
+      }
+      
+
+      
+  
+
+  }
+
+  else if(location.length==0) {
+    setisError(true);
+
+  }else{
+    setisError(true);
+  }
+
+}
+
+
+
+
+  const vPhone = (phone) => {
+    const v = phone.nativeEvent.text;
+    setPhone(v);
+    if (
+      /^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$/i.test(
+        v
+      ) &&
+      v.length === 11
+    ) {
+      setValidPhone(true);
+      setPhone(v);
+    } else {
+      setValidPhone(false);
+    }
+  };
+
+  const vUserName = (name) => {
+    console.log(name);
+    const v = name.nativeEvent.text;
+    console.log(v);
+    setUserName(v);
+    if (v.length > 5) {
+      setValidUserName(true);
+      setUserName(v);
+    } else {
+      setValidUserName(false);
+    }
+  };
 
 
 
@@ -83,7 +138,9 @@ export default function Profile() {
     try {
       const docSnap = await getDoc(docRef);
       
+      
         setUserData(docSnap.data());
+        await AsyncStorage.setItem("userdata", JSON.stringify(userData));
         setflag(true);
      
     } catch (error) {
@@ -99,7 +156,8 @@ export default function Profile() {
 
   useEffect(() => {
     fetchData();
-  }, [!flag]);
+    fun();
+  }, [!flag,!isVisible]);
   return (
     
     <SafeAreaView style={styles.container}>
@@ -123,42 +181,6 @@ export default function Profile() {
           />
 
           <Text style={{ fontSize:18,fontWeight:'bold', color:"white",marginTop:3}}>{userData.username}</Text>
-
-
-
-      
-
-
-        {/* <View style={{ flexDirection: "row", marginTop: 15,backgroundColor:'red' }}>
-          <Image
-            source={require("../assets/images/photo.png")}
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 50,
-              marginTop: 20,
-              marginLeft: -10,
-            }}
-          />
-
-            <Title
-              style={[
-                styles.title,
-                {
-                  flexDirection: "row",
-                  marginTop: 50,
-                  marginBottom: 4,
-                  color: "#ffb01d",
-                  marginLeft: 5,
-                  textAlign: "left",
-                  maxWidth: "70%", backgroundColor:'blue'
-                },
-              ]}
-            >
-              {userData.username}
-            </Title>
-          
-        </View> */}
       </View>
 
       <View style={styles.userInfo}>
@@ -278,7 +300,8 @@ export default function Profile() {
               value={location}
               onChangeText={(text) => setLocation(text)}
             />
-            <TouchableOpacity style={styles.submit}>
+            {isError? <Text>you didn't change any thing or invalid input</Text> : null    }
+            <TouchableOpacity style={styles.submit} onPress={()=>editProfile()}>
               <Text style={{ color: "white", fontSize: 15, fontWeight: "500" }}>
                 Edit your profile
               </Text>
