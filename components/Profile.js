@@ -1,5 +1,6 @@
 import * as React from "react";
-import { useState } from "react";
+import { router } from "expo-router";
+import { useState ,useEffect} from "react";
 import {
   View,
   SafeAreaView,
@@ -8,73 +9,129 @@ import {
   Pressable,
   Modal,
   TouchableOpacity,
-  TextInput,
+  TextInput,Text
 } from "react-native";
-import {
-  Avatar,
-  Title,
-  Caption,
-  Text,
-  TouchableRipple,
-} from "react-native-paper";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc } from "firebase/firestore";
+  import { logout } from "../firebase/auth";
+
+import { db } from "../firebase/Config";
+
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import lemon from "../assets/photo.png";
-import mango from "../assets/mango.jpg";
+// import lemon from "../assets/photo.png";
+// import mango from "../assets/mango.jpg";
 export default function Profile() {
   const [isVisible, setVisible] = useState(false);
+  const [userData, setUserData] = useState({});
+
+
+
   const [phone, setPhone] = useState("");
   const [validPhone, setValidPhone] = useState(false);
 
   const [password, setPassword] = useState("");
   const [location, setLocation] = useState("");
-  const [userName, setUserName] = useState("");
+  const [userName1, setUserName] = useState("");
   const [validUserName, setValidUserName] = useState(false);
   const [error, setError] = useState("");
+  const [flag, setflag] = useState(false);
 
-  const vPhone = (phone) => {
-    const v = phone.nativeEvent.text;
-    setPhone(v);
-    if (
-      /^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$/i.test(
-        v
-      ) &&
-      v.length === 11
-    ) {
-      setValidPhone(true);
-      setPhone(v);
-    } else {
-      setValidPhone(false);
+
+  // const vPhone = (phone) => {
+  //   const v = phone.nativeEvent.text;
+  //   setPhone(v);
+  //   if (
+  //     /^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$/i.test(
+  //       v
+  //     ) &&
+  //     v.length === 11
+  //   ) {
+  //     setValidPhone(true);
+  //     setPhone(v);
+  //   } else {
+  //     setValidPhone(false);
+  //   }
+  // };
+
+  // const vUserName = (name) => {
+  //   console.log(name);
+  //   const v = name.nativeEvent.text;
+  //   console.log(v);
+  //   setUserName(v);
+  //   if (v.length > 5) {
+  //     setValidUserName(true);
+  //     setUserName(v);
+  //   } else {
+  //     setValidUserName(false);
+  //   }
+  // };
+
+
+
+
+  const fetchData = async () => {
+    const uid = JSON.parse( await AsyncStorage.getItem("@user")).uid;
+    const docRef = doc(db,'users', uid);
+
+    try {
+      const docSnap = await getDoc(docRef);
+      
+        setUserData(docSnap.data());
+        setflag(true);
+     
+    } catch (error) {
+      console.error("Error getting document:", error);
     }
   };
 
-  const vUserName = (name) => {
-    console.log(name);
-    const v = name.nativeEvent.text;
-    console.log(v);
-    setUserName(v);
-    if (v.length > 5) {
-      setValidUserName(true);
-      setUserName(v);
-    } else {
-      setValidUserName(false);
-    }
-  };
+  const logo = () => {
+    logout();
+    router.replace("/account/login");
+  }
+
+
+  useEffect(() => {
+    fetchData();
+  }, [!flag]);
   return (
+    
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>
-        <View style={styles.edit}>
-          <Icon.Button
-            name="account-edit"
-            size={25}
-            color="#ffb01d"
-            backgroundColor="white"
-            onPress={() => setVisible(true)}
-          />
-        </View>
 
-        <View style={{ flexDirection: "row", marginTop: 15 }}>
+        <TouchableOpacity   onPress={() => setVisible(true)} style = {{ width: '100%', alignItems: 'flex-end', paddingRight: 10, paddingTop: 10}}>
+          <Icon  name="account-edit" color="white"    size={25} />
+        </TouchableOpacity>
+
+        <Image
+            source={require("../assets/images/photo.png")}
+            style={{
+              width: 75,
+              height: 75,
+              borderRadius: 50,
+              marginTop: 0,
+              marginLeft: 0,
+              color: "#ffb01d",
+
+            }}
+          />
+
+          <Text style={{ fontSize:18,fontWeight:'bold', color:"white",marginTop:3}}>{userData.username}</Text>
+
+
+
+      
+
+
+        {/* <View style={{ flexDirection: "row", marginTop: 15,backgroundColor:'red' }}>
           <Image
-            source={require("../assets/photo.png")}
+            source={require("../assets/images/photo.png")}
             style={{
               width: 100,
               height: 100,
@@ -84,7 +141,6 @@ export default function Profile() {
             }}
           />
 
-          <View style={{ marginLeft: 20 }}>
             <Title
               style={[
                 styles.title,
@@ -93,17 +149,16 @@ export default function Profile() {
                   marginTop: 50,
                   marginBottom: 4,
                   color: "#ffb01d",
-                  marginLeft: -13,
+                  marginLeft: 5,
                   textAlign: "left",
-                  justifyContent: "flex-start",
-                  maxWidth: "99%",
+                  maxWidth: "70%", backgroundColor:'blue'
                 },
               ]}
             >
-              Abdelsalam Ebrahim
+              {userData.username}
             </Title>
-          </View>
-        </View>
+          
+        </View> */}
       </View>
 
       <View style={styles.userInfo}>
@@ -117,7 +172,7 @@ export default function Profile() {
               fontWeight: "700",
             }}
           >
-            Maadi, Cairo
+              {userData.address}
           </Text>
         </View>
         <View style={styles.row}>
@@ -130,7 +185,7 @@ export default function Profile() {
               fontWeight: "700",
             }}
           >
-            01142950235
+              {userData.phone}
           </Text>
         </View>
         <View style={styles.row}>
@@ -143,7 +198,7 @@ export default function Profile() {
               fontWeight: "700",
             }}
           >
-            Abdo14@email.com
+              {userData.email}
           </Text>
         </View>
 
@@ -161,9 +216,9 @@ export default function Profile() {
           </Text>
         </View>
       </View>
-      <Pressable style={styles.buttonS}>
+      <TouchableOpacity style={styles.buttonS} onPress={() => logo()}>
         <Text style={styles.titleS}> Logout </Text>
-      </Pressable>
+      </TouchableOpacity>
 
       <Modal visible={isVisible}>
         <View style={styles.modalContainer}>
@@ -195,11 +250,11 @@ export default function Profile() {
             <TextInput
               placeholder="Edit Your UserName..."
               style={styles.textInput}
-              value={userName}
+              value={userName1}
               onChange={(t) => vUserName(t)}
             />
 
-            {userName.length < 1 ? null : validUserName ? null : (
+            {userName1.length < 1 ? null : validUserName ? null : (
               <Text style={{ fontSize: 12 }}>
                 must be at least 6 characters
               </Text>
@@ -241,19 +296,23 @@ const styles = StyleSheet.create({
     backgroundColor: "white", //#F24675
   },
   userInfoSection: {
-    paddingHorizontal: 30,
-    marginBottom: 25,
+    flex:0.30,
+    alignContent: 'center',
+    alignItems: 'center',
+    marginBottom: 0,
+    borderBottomEndRadius:50,
+    borderBottomStartRadius: 50,
+    backgroundColor: "#ffb01d",
   },
   userInfo: {
-    flex: 0.75,
+    flex: 0.70,
+    alignContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 0,
-    marginBottom: 25,
-    marginLeft: "10%",
-    borderRadius: 20,
+    marginTop: 50,
+    // marginLeft: "10%",
     backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "80%",
+    width: "100%",
   },
   title: {
     fontSize: 20,
@@ -263,7 +322,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     fontWeight: "bold",
-    color: "white",
+    color: "#ffb01d",
   },
   caption: {
     fontSize: 14,
@@ -271,8 +330,10 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   row: {
+    justifyContent:'center',
     flexDirection: "row",
     marginBottom: 15,
+    maxWidth: "90%",
     //  borderRadius:20,
     //borderColor:"#CFFBFE",
     //borderWidth:10,
@@ -287,7 +348,12 @@ const styles = StyleSheet.create({
     marginLeft: 100,
     marginRight: 100,
   },
-  edit: { right: -150, left: 70, top: 120, marginLeft: 200, marginRight: 50 },
+  edit: {
+    right: -150,
+    left: 70, 
+    top: 50, 
+    marginLeft: 200,
+    marginRight: 50 },
 
   modalContainer: {
     flex: 1,

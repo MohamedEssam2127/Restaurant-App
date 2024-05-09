@@ -2,14 +2,8 @@ import { Text, View, TouchableOpacity, StyleSheet, ActivityIndicator, TextInput,
 import { Stack, router } from "expo-router";
 import HomeScreen from "../../screens/HomeScreen";
 import { AntDesign } from '@expo/vector-icons';
-import { logout } from "../../firebase/auth";
 
 export default function Page() {
-
-  const logo = () => {
-    logout();
-    router.replace("/account/login");
-  }
   
   return (
     <View style={styles.upper}>
@@ -38,8 +32,8 @@ export default function Page() {
 
 
       <HomeScreen/>
-      <TouchableOpacity onPress={() => logo()}>
-        <Text>LogOut</Text>
+      <TouchableOpacity onPress={() => router.navigate('/home/profile')}>
+        <Text>Profile</Text>
       </TouchableOpacity>
     </View>
   );
