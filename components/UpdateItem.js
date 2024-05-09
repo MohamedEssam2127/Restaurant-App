@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     StyleSheet,
     Text,
@@ -8,16 +8,19 @@ import {
     Modal,
     TextInput,
     TouchableOpacity,
+    Alert
 } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import Icon from '@expo/vector-icons/FontAwesome6';
+import * as FileSystem from 'expo-file-system';
+import { firebase } from '../firebase/Config';
+import "firebase/storage";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { updateDoc,doc } from "firebase/firestore";
+import { db } from "../firebase/Config";
 
 
-const editImg = require("../assets/editing.png");
-const cancel = require("../assets/cancel.png");
-
-export default function UpdateItem() {
+export default function UpdateItem({item}) {
     const [image, setImage] = useState(null);
     const [url, setUrl] = useState("");
     const [loading, setUploading] = useState(false);
@@ -25,11 +28,13 @@ export default function UpdateItem() {
     const [newName, setNewName] = useState("");
     const [newPrice, setNewPrice] = useState("");
     const [newDesc, setNewDesc] = useState("");
+    const [iserr, setIsError] = useState(false);
+
 
     const pickImage = async () => {
         try {
             const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All, // Images and videos
+                mediaTypes: ImagePicker.MediaTypeOptions.All, 
                 allowsEditing: true,
                 aspect: [4, 3],
                 quality: 1,
@@ -54,7 +59,7 @@ export default function UpdateItem() {
             setUrl(await ref.getDownloadURL());
             console.log("Download URL:", url);
             Alert.alert("Upload Completed");
-            // setImage(null);
+
         } catch (error) {
             console.error("Upload failed:", error);
             Alert.alert("Upload Failed");
@@ -62,6 +67,39 @@ export default function UpdateItem() {
             setUploading(false);
         }
     };
+    const defualtValues = () => {
+        setNewDesc(item.description);
+        setNewName(item.name);
+        setNewPrice(String(item.price));
+        setUrl(item.photo);
+    }
+
+    useEffect(() => {
+        defualtValues();
+    },[!isVisible])
+
+    const handleUpdating = async () =>{
+        if((newName===item.name&&newDesc===item.description&&newPrice===item.price&&item.photo===url)){
+            setIsError(true);
+        }
+        else if (newName.length=!0&&newPrice!=0&&newDesc!=0){
+            setIsError(false);
+            const docRef=doc(db,'Foods',item.id);
+            const newFood = {
+                name:newName,price:newPrice,description:newDesc,photo:url
+            }
+            try {
+                await updateDoc (docRef,newFood,{merge:true});
+                Alert.alert("Done!");
+            }
+            catch(error){
+                console.error("Error updating " , error)
+            }
+
+
+        }
+        
+    }
 
     return (
         <View style={styles.container}>
@@ -96,15 +134,10 @@ export default function UpdateItem() {
                         >
                             <MaterialIcons name="cancel" size={40} style={styles.Img}/>
 
-                            {/* <Image source={cancel} style={styles.Img} /> */}
                         </TouchableOpacity>
                     </View>
 
-                    {/* {imageData !== null ? (
-                        <Image source={{ uri: imageData }}
-                            style={styles.imageStyle}
-                        />
-                    ) : null} */}
+                
                     <View style={styles.inputFields}>
                         <TextInput
                             placeholder="Food name..."
@@ -112,12 +145,14 @@ export default function UpdateItem() {
                             value={newName}
                             onChangeText={(text) => setNewName(text)}
                         />
+                        
 
                         <TextInput
                             placeholder="Description..."
                             style={styles.textInput}
                             value={newDesc}
                             onChangeText={(text) => setNewDesc(text)}
+                            multiline
                         />
 
                         <TextInput
@@ -128,29 +163,27 @@ export default function UpdateItem() {
                             keyboardType="numeric"
                         />
 
-                        {/* <TextInput
-                            placeholder="Image Url..."
-                            style={styles.textInput}
-                            value={newImg}
-                            onChangeText={(text) => setNewImg(text)}
-                        /> */}
 
+                    <View style={{flexDirection:'row'}}>
                         <TouchableOpacity style={styles.imgBut} onPress={() => { pickImage() }}>
                             <Text style={{ color: "white", fontSize: 15, fontWeight: "500" }}>
-                                Pick Photo From Gallery
+                                Pick Photo
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.imgBut} onPress={() => { uploadImage() }}>
                             <Text style={{ color: "white", fontSize: 15, fontWeight: "500" }}>
-                                Upload
+                            upload Photo
                             </Text>
                         </TouchableOpacity>
+                    </View>
 
-                        <TouchableOpacity style={styles.submit}>
+                        <TouchableOpacity style={styles.submit} onPress={()=>{handleUpdating()}} >
                             <Text style={{ color: "white", fontSize: 15, fontWeight: "500" }}>
                                 Update food
                             </Text>
                         </TouchableOpacity>
+                        {iserr? <Text>Invalid</Text> : null}
+
                     </View>
                 </View>
             </Modal>
@@ -160,8 +193,7 @@ export default function UpdateItem() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: "#fff",
+        flex: 1
         // alignItems: 'center',
         // justifyContent: 'center',
     },
@@ -212,7 +244,8 @@ const styles = StyleSheet.create({
     },
     imgBut: {
         backgroundColor: "#121312",
-        width: "80%",
+        width: "39%",
+        marginRight:5,
         height: 70,
         borderRadius: 15,
         borderWidth: 0.5,
@@ -228,5 +261,5 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 20,
         alignSelf: 'center'
-    }
+    },
 });
