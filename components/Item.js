@@ -13,6 +13,7 @@ import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from "@expo/vector-icons";
 import pizza from "../assets/images/classic-cheese-pizza-recipe-2-64429a0cb408b.jpg";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { doc, getDoc ,setDoc,} from "firebase/firestore";
 import { db } from "../firebase/Config";
@@ -39,7 +40,8 @@ export default function Item({id}) {
     }
   } 
   const AddToCart= async()=>{
-    await setDoc(doc(db, "At_ToCart", id), {
+    const uid = JSON.parse( await AsyncStorage.getItem("@user")).uid;
+    await setDoc(doc(db, `users/${uid}/addToCart`, id), {
       name: item.name,
       price: item.price,
       counter: counter,
