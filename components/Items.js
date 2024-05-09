@@ -22,7 +22,7 @@ export default function Items({ item }) {
       <View style= {styles.Container}>
       <Image source={pizza} style={styles.image} />
       <View style ={styles.titleContainer}>
-    <Text style= {{fontWeight:'700',fontSize:18}}> {item.name}</Text>
+    <Text style= {{fontWeight:'700',fontSize:16}}> {item.name}</Text>
     <View  style ={styles.titleContainer}>
     <Text style ={{fontSize:20,marginRight:10,marginTop:3}}> {item.price}</Text>
       <TouchableOpacity style= {styles.addCart} onPress={()=>router.push('home/AddToCart')}>
