@@ -33,7 +33,7 @@ const Categories = () => {
                 {foods.map((item, index) => (
                     <View style={styles.search} key={index}>
                         <TouchableOpacity style={styles.image} onPress={()=>  router.push({
-        pathname: "products/", 
+        pathname: "home/products/", 
         params: { name: item.name },
       })}>
                             <Image source={{ uri: item.image }} style={styles.imageStyle} />

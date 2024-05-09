@@ -125,7 +125,7 @@ export default function Item({id}) {
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    marginTop:'90%'
+    marginTop:'71%'
   },
   image: {
     flex:1,
@@ -172,8 +172,7 @@ const styles = StyleSheet.create({
     textAlign:'center'
   },
   back:{
-    marginTop:'11%',
-    position:'absolute',
+    marginTop:'8%',
     marginLeft:'5%',
     
   },
