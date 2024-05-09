@@ -50,7 +50,7 @@ export default function Page() {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <FontAwesome5 name="home" size={24} color="white" />
               <Text style={{ fontWeight: 'bold', fontSize: 30, color: '#fff', marginLeft: 10 }}>
-                Cart
+              Home
               </Text>
             </View>
           ),
