@@ -1,26 +1,62 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import pizza from "../assets/images/classic-cheese-pizza-recipe-2-64429a0cb408b.jpg";
+
 import CartItem from "./CartItem";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase/Config";
 export default function AddToCart() {
-  const list =[1,2]
+  const list =[1,2];
+  const [Total,setTotal]= useState(1);
+  const [cartItems ,setCartItems]= useState([]);
+  const getCartItem =async()=>{
+    const querySnapshot = await getDocs(collection(db, "At_ToCart"));
+    const Data = querySnapshot.docs.map((doc) => doc.data());
+    setCartItems(Data);
+  }
+
+  useEffect(()=>{
+    getCartItem();
+  },[])
+  useEffect(() => {
+    const newTotal = cartItems.reduce((sum, item) => sum + item.price*item.counter, 0);
+    setTotal(newTotal);
+  }, [cartItems]);
   return (
     <View style={styles.container}>
-          <FlatList
-          data={list}
+      <View style={{height:'86%'}}>
+      <FlatList
+          data={cartItems}
           renderItem={({ item }) => {
             return (
-              <View style={styles.container}>
-                <CartItem/>
+              <View >
+                <CartItem item={item}/>
               </View>
             );
           }}
         />
-    
+      </View>
+        
+        <View>
+        <Text style={styles.Total}> total {Total}$</Text>
+        <TouchableOpacity style={styles.Bookbtn} >
+          <Text
+            style={{
+              textAlign: "center",
+              color: "white",
+              fontSize: 20,
+              fontWeight:'800'
+            }}
+          >
+           Buy
+          </Text>
+        </TouchableOpacity>
+        </View>
+ 
     </View>
   );
 }
@@ -70,5 +106,17 @@ const styles = StyleSheet.create({
     alignItems:'center',
     gap:20,
     padding:10,
+  },
+  Total:{
+    fontSize:30,
+    fontWeight:'600'
+  },
+  Bookbtn: {
+    padding: 15,
+    marginTop:6,
+    backgroundColor: "#ffb01d",
+    borderWidth: 1,
+    borderRadius: 99,
+    borderColor: "#ffb01d",
   },
 });
