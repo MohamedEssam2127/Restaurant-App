@@ -70,7 +70,7 @@ export default function Category({ name }) {
           </TouchableOpacity>
         </View>
         <FlatList
-        
+        style ={{marginBottom:130}}
           data={data}
           renderItem={({ item }) => {
             return (
