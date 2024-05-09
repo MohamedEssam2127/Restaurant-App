@@ -2,7 +2,7 @@ import { View, Text,TouchableOpacity, } from 'react-native'
 import React from 'react'
 import { Stack, useGlobalSearchParams } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons';
-import Item from '../../../components/Item'
+import Item from '../../components/Item'
 export default function Products() {
   const { fid } = useGlobalSearchParams();
   return (
