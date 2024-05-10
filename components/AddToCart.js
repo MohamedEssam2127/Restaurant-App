@@ -8,24 +8,38 @@ import pizza from "../assets/images/classic-cheese-pizza-recipe-2-64429a0cb408b.
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CartItem from "./CartItem";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { db } from "../firebase/Config";
 export default function AddToCart() {
   const list =[1,2];
   const [Total,setTotal]= useState(1);
   const [cartItems ,setCartItems]= useState([]);
   
-  const getCartItem =async()=>{
+  // const getCartItem =async()=>{
+  //   const uid = JSON.parse( await AsyncStorage.getItem("@user")).uid;
+  //   const querySnapshot = await getDocs(collection(db, `/users/${uid}/addToCart`));
+  //   const Data = querySnapshot.docs.map((doc) => doc.data());
+  //   setCartItems(Data);
+  // }
+  const delete2 =  async( foodId)=>{
+    const product = cartItems.find(({id})=> id === foodId);
+    const newCart = cartItems.filter(u=>u.id!==foodId); 
+    setCartItems(newCart);
+    const uid = JSON.parse( await AsyncStorage.getItem("@user")).uid;
+    await deleteDoc(doc(db, `/users/${uid}/addToCart`, foodId));
+
+  }
+
+
+
+  useEffect( async ()=>{
+    // getCartItem();
     const uid = JSON.parse( await AsyncStorage.getItem("@user")).uid;
     const querySnapshot = await getDocs(collection(db, `/users/${uid}/addToCart`));
     const Data = querySnapshot.docs.map((doc) => doc.data());
     setCartItems(Data);
-  }
-
-  useEffect(()=>{
-    getCartItem();
   },[])
-  useEffect(() => {
+  useEffect (() => {
     const newTotal = cartItems.reduce((sum, item) => sum + item.price*item.counter, 0);
     setTotal(newTotal);
   }, [cartItems]);
@@ -37,7 +51,7 @@ export default function AddToCart() {
           renderItem={({ item }) => {
             return (
               <View >
-                <CartItem item={item}/>
+                <CartItem item={item} ondelete ={()=>delete2(item.id)}/>
               </View>
             );
           }}
@@ -46,7 +60,7 @@ export default function AddToCart() {
         
         <View>
         <Text style={styles.Total}> total {Total}$</Text>
-        <TouchableOpacity style={styles.Bookbtn} >
+        <TouchableOpacity style={styles.Bookbtn}   >
           <Text
             style={{
               textAlign: "center",
