@@ -15,7 +15,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import pizza from "../assets/images/classic-cheese-pizza-recipe-2-64429a0cb408b.jpg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import { doc, getDoc ,setDoc,} from "firebase/firestore";
+import { doc, getDoc ,setDoc,updateDoc} from "firebase/firestore";
 import { db } from "../firebase/Config";
 export default function Item({id}) {
   const [ReadMore, setReadMore] = useState(false);
@@ -41,12 +41,29 @@ export default function Item({id}) {
   } 
   const AddToCart= async()=>{
     const uid = JSON.parse( await AsyncStorage.getItem("@user")).uid;
-    await setDoc(doc(db, `users/${uid}/addToCart`, id), {
-      name: item.name,
-      price: item.price,
-      counter: counter,
-      id:item.id
-    });
+    const docRef = doc(db, `users/${uid}/addToCart`, id);
+        const docSnap = await getDoc(docRef);
+        const getadd= {...docSnap.data()};
+        if(getadd.id ===id){
+
+          let plus =getadd.counter;
+          plus++;
+         // console.log("*********** plus ",plus);
+          await updateDoc(docRef, {
+            counter: plus
+          });
+          console.log("*********** plus ",plus);
+        }else{
+          await setDoc(doc(db, `users/${uid}/addToCart`, id), {
+            name: item.name,
+            price: item.price,
+            counter: counter,
+            id:item.id
+          });
+        }
+        alert("add successfully");
+        setcounter(1);
+       
   }
   useEffect(()=>{
     fetItem()

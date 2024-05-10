@@ -8,7 +8,9 @@ import { db } from "../firebase/Config";
 import pizza from "../assets/images/classic-cheese-pizza-recipe-2-64429a0cb408b.jpg";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-export default function CartItem({ item }) {
+import { router } from "expo-router";
+export default function CartItem({ item ,ondelete}) {
+  console.log("heeeeeeeeeeeeeeeeeeeeereeeeeeeeeeeeeeee",item);
   const [counter, setcounter] = useState(item.counter);
   const [flag, setFlag] = useState(item);
   
@@ -23,8 +25,8 @@ export default function CartItem({ item }) {
     }
   };
   const handleDelete = async () => {
-    await deleteDoc(doc(db, "At_ToCart", item.id));
-
+    const uid = JSON.parse( await AsyncStorage.getItem("@user")).uid;
+    await deleteDoc(doc(db, `/users/${uid}/addToCart`, item.id));
   }
   useEffect(() => {
     const x = async () => {
@@ -45,9 +47,6 @@ export default function CartItem({ item }) {
           <Text style={styles.price}> price {item.price * counter}$</Text>
         </View>
         <View style={styles.messagebtn}>
-          <TouchableOpacity onPress={increaseCounter}>
-            <Entypo name="circle-with-plus" size={24} color="#ffb01d" />
-          </TouchableOpacity>
           <Text
             style={{
               textAlign: "center",
@@ -58,12 +57,9 @@ export default function CartItem({ item }) {
           >
             {counter}
           </Text>
-          <TouchableOpacity onPress={decreaseCounter}>
-            <AntDesign name="minuscircle" size={24} color="#ffb01d" />
-          </TouchableOpacity>
         </View>
         <View style = {{marginLeft:"-3%", marginTop: "6%"}}>
-          <TouchableOpacity onPress={handleDelete}>
+          <TouchableOpacity onPress={ondelete}>
             <MaterialCommunityIcons name="delete" size={40} color="black" />
           </TouchableOpacity>
 
