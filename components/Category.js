@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import {
   View,
   Text,
@@ -11,14 +11,16 @@ import {
 import Items from "./Items";
 import DATA from "./DATA/items.json";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   where,
   collection,
   query,
   getDocs,
   setDoc,
+  getDoc,
   doc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../firebase/Config";
 
@@ -28,6 +30,9 @@ export default function Category({ name }) {
   const [text, setText] = useState("");
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
+
+
+
 
   useEffect(() => {
     getDataFromFireBase();
@@ -46,6 +51,50 @@ export default function Category({ name }) {
     console.log('searchFor', searchFor);
     setData(DATA.filter((user) => user.name.toLowerCase().includes(searchFor.toLowerCase())));
   };
+
+  let x;
+  const [user, setUser] = useState({});
+  const getUser = async () => {
+    const uid = JSON.parse(await AsyncStorage.getItem("@user")).uid;
+    x = uid;
+    fetItem();
+  }
+  const fetItem = async () => {
+    const docRef = doc(db, "users", x);
+    try {
+      const doc = await getDoc(docRef);
+      const data = doc.data();
+      setUser(data);
+    } catch (e) {
+      console.log("Error getting cached document:", e);
+    }
+  }
+
+  
+  useEffect(() => {
+    getUser();
+  }, [])
+
+
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    if(user.isAdmin){
+    intervalRef.current = setInterval(getDataFromFireBase, 4000); // Adjust time here
+
+    // Cleanup function to stop the interval when the component unmounts
+    return () => clearInterval(intervalRef.current);
+    }
+  }, []);
+
+  const delete2 =  async( foodId)=>{
+  //  const product = data.find(({id})=> id === foodId);
+    const newCart = data.filter(u=>u.id!==foodId); 
+    setData(newCart);
+   
+    await deleteDoc(doc(db,"Foods", foodId));
+    Alert.alert("Food Deleted",item.id)
+  }
 
   return (
     <>
@@ -75,7 +124,7 @@ export default function Category({ name }) {
           renderItem={({ item }) => {
             return (
               <View style={styles.container}>
-                <Items item={item} />
+                <Items item={item}   Dl2={()=>delete2(item.id)} />
               </View>
             );
           }}

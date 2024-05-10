@@ -8,7 +8,7 @@ import {
     ScrollView,
     SafeAreaView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from "@expo/vector-icons";
@@ -35,9 +35,18 @@ export default function Item({ id }) {
         fetItem()
     }, [])
     
+    const intervalRef = useRef(null);
+
+    useEffect(() => {
+      intervalRef.current = setInterval(fetItem, 4000); // Adjust time here
+  
+      // Cleanup function to stop the interval when the component unmounts
+      return () => clearInterval(intervalRef.current);
+    }, []);
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <ImageBackground source={pizza} style={styles.image} >
+            <ImageBackground source={{uri:item.photo}} style={styles.image} >
                 <TouchableOpacity style={styles.back} onPress={() => router.back()}>
                     <FontAwesome name="chevron-left" size={30} color="white" style={styles.backbtn} />
                 </TouchableOpacity>

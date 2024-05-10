@@ -32,6 +32,8 @@ export default function AddItem({ Category }) {
     const [iserr, setIsError] = useState(false);
 
 
+
+
     const pickImage = async () => {
         try {
             const result = await ImagePicker.launchImageLibraryAsync({

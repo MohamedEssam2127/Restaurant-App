@@ -70,7 +70,7 @@ export default function Item({id}) {
   },[])
   return (
     <SafeAreaView style={{flex:1}}>
-      <ImageBackground source={pizza} style={styles.image} >
+      <ImageBackground source={{uri:item.photo}} style={styles.image} >
         <TouchableOpacity style= {styles.back} onPress={()=>router.back()}>
         <FontAwesome name="chevron-left" size={30} color="white" style={styles.backbtn} />
         </TouchableOpacity>
