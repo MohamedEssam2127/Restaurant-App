@@ -20,10 +20,8 @@ export default function Products() {
     x = uid;
     fetItem();
   }
-
   const fetItem = async () => {
     const docRef = doc(db, "users", x);
-
     try {
       const doc = await getDoc(docRef);
       const data = doc.data();
@@ -33,6 +31,8 @@ export default function Products() {
       console.log("Error getting cached document:", e);
     }
   }
+
+  
   useEffect(() => {
     getUser();
   }, [])
@@ -55,8 +55,8 @@ export default function Products() {
           headerRight:()=>(
             <>
             
-            {flag?(<></> ):( <View style={{right:'65%'}} >
-    <AddItem Category={name}/>
+            {!flag?(<></> ):( <View style={{right:'65%'}} >
+              <AddItem Category={name}/>
             </View>)}
           
             </>
