@@ -66,15 +66,10 @@ export default function Items({ item ,Dl2}) {
         <View style={styles.Container}>
           <Image source={{ uri: item.photo }} style={styles.image} />
           <View style={styles.titleContainer}>
-            <Text style={{ fontWeight: '700', fontSize: 16 }}> {item.name}</Text>
+            <Text style={{ fontWeight: '700', fontSize: 16 ,maxWidth:290}}> {item.name}</Text>
             <View style={styles.titleContainer}>
-              <Text style={{ fontSize: 20, marginRight: 10, marginTop: 3 }}> {item.price}</Text>
-              <TouchableOpacity style={styles.addCart} onPress={() => router.push('home/cart')}>
-                <FontAwesome6 name="cart-shopping" size={18} color="white" />
-              </TouchableOpacity>
-
+              <Text style={{ fontSize: 20, marginRight: 10, marginTop: 3 }}> {item.price}$</Text>
             </View>
-
           </View>
           <View style={styles.about}>
             <Text style={{ color: 'gray', marginBottom: 30 }}>fast food {item.category}</Text>
