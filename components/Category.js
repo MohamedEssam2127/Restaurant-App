@@ -79,7 +79,7 @@ export default function Category({ name }) {
   const intervalRef = useRef(null);
 
   useEffect(() => {
-    if(user.isAdmin){
+    if(!user.isAdmin){
     intervalRef.current = setInterval(getDataFromFireBase, 4000); // Adjust time here
 
     // Cleanup function to stop the interval when the component unmounts

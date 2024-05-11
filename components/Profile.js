@@ -180,7 +180,7 @@ setisError(true);
             }}
           />
 
-          <Text style={{ fontSize:18,fontWeight:'bold', color:"white",marginTop:3}}>{userData.username}</Text>
+          <Text style={{ fontSize:18,fontWeight:'bold', color:"white",marginTop:3}}>{userData.isAdmin ? "Welcome Manager , " : ""}{userData.username}</Text>
       </View>
 
       <View style={styles.userInfo}>
@@ -221,20 +221,6 @@ setisError(true);
             }}
           >
               {userData.email}
-          </Text>
-        </View>
-
-        <View style={styles.row}>
-          <Icon name="basket-check" color="#ffb01d" size={20} />
-          <Text
-            style={{
-              color: "#ffb01d",
-              marginLeft: 20,
-              fontSize: 20,
-              fontWeight: "700",
-            }}
-          >
-            : 0
           </Text>
         </View>
       </View>

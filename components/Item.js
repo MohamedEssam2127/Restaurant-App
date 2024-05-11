@@ -17,10 +17,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { doc, getDoc ,setDoc,updateDoc} from "firebase/firestore";
 import { db } from "../firebase/Config";
+import Review from "../screens/Review";
 export default function Item({id}) {
   const [ReadMore, setReadMore] = useState(false);
   const [counter,setcounter] = useState(1);
   const [item,setItem]= useState({});
+  const [isVisible, setVisible] = useState(false);
   const fetItem=async()=>{
     const docRef = doc(db, "Foods", id);
     try {
@@ -96,6 +98,13 @@ export default function Item({id}) {
         </Text>
       </Pressable>
       </ScrollView>
+
+      <TouchableOpacity style = {styles.review} onPress={() => setVisible(true)}>
+        <Text style = {{fontWeight: 'bold', fontSize: 18, color: "#ffb01d"}}>Reviews</Text>
+      </TouchableOpacity>
+
+      <Review visible={isVisible} setVisible={setVisible} mid={id}/>
+
       <Text style= {styles.price}> Toltle price {item.price*counter}$</Text>
       <View
         style={{ display: "flex", flexDirection: "row", gap: 5, margin: 8,marginHorizontal:80 }}
@@ -144,6 +153,8 @@ export default function Item({id}) {
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
+    alignContent: 'center',
+    alignItems: 'center',
     marginTop:'90%'
   },
   image: {
