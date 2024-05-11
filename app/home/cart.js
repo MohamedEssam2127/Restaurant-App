@@ -27,7 +27,7 @@ export default function index() {
         <FontAwesome name="chevron-left" size={30} color="white"style={{paddingRight:10}} />
         </TouchableOpacity>
           ),
-        }}
+        }}   
       /> */}
 
 
