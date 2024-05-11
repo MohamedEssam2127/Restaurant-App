@@ -38,9 +38,9 @@ const buy = async ()=>{
   for(let i=0;i<cartItems.length;i++){
     let butItem = cartItems[i];
     await deleteDoc(doc(db, `/users/${uid}/addToCart`, butItem.id));
-    alert("buy completed successfully");
 
   }
+  alert("buy completed successfully");
   setCartItems([]);
 }
 
