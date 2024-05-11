@@ -38,7 +38,7 @@ export default function Item({ id }) {
     const intervalRef = useRef(null);
 
     useEffect(() => {
-      intervalRef.current = setInterval(fetItem, 4000); // Adjust time here
+      intervalRef.current = setInterval(fetItem, 3000); // Adjust time here
   
       // Cleanup function to stop the interval when the component unmounts
       return () => clearInterval(intervalRef.current);
