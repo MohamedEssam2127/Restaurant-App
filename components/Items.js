@@ -5,7 +5,8 @@ import pizza from '../assets/images/classic-cheese-pizza-recipe-2-64429a0cb408b.
 import Pasta from '../assets/images/images.jpg';
 import { FontAwesome6 } from '@expo/vector-icons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc,getDoc } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db } from "../firebase/Config";
 export default function Items({ item ,Dl2}) {
   const [isHovered, setIsHovered] = useState(false);
@@ -79,7 +80,7 @@ export default function Items({ item ,Dl2}) {
             <Text style={{ color: 'gray', marginBottom: 30 }}>fast food {item.category}</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text>20% Off</Text>
-            {!user.isAdmin ? <TouchableOpacity style={styles.deleteIcon} onPress={Dl2}>
+            {user.isAdmin ? <TouchableOpacity style={styles.deleteIcon} onPress={Dl2}>
               <FontAwesome6 name="trash-alt" size={24} color="#ffb01d" />
             </TouchableOpacity> : null}
         
