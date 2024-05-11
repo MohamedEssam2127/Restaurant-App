@@ -8,10 +8,9 @@ import pizza from "../assets/images/classic-cheese-pizza-recipe-2-64429a0cb408b.
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CartItem from "./CartItem";
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs ,getDoc } from "firebase/firestore";
 import { db } from "../firebase/Config";
 export default function AddToCart() {
-  const list =[1,2];
   const [Total,setTotal]= useState(1);
   const [cartItems ,setCartItems]= useState([]);
   
@@ -30,7 +29,20 @@ export default function AddToCart() {
 
   }
 
+const buy = async ()=>{
+  if(cartItems.length===0){
+    alert("cart is empty");
+    return 
+  }
+  const uid = JSON.parse( await AsyncStorage.getItem("@user")).uid;
+  for(let i=0;i<cartItems.length;i++){
+    let butItem = cartItems[i];
+    await deleteDoc(doc(db, `/users/${uid}/addToCart`, butItem.id));
+    alert("buy completed successfully");
 
+  }
+  setCartItems([]);
+}
 
   useEffect( async ()=>{
     // getCartItem();
@@ -60,7 +72,7 @@ export default function AddToCart() {
         
         <View>
         <Text style={styles.Total}> total {Total}$</Text>
-        <TouchableOpacity style={styles.Bookbtn}   >
+        <TouchableOpacity style={styles.Bookbtn} onPress={()=>buy()}  >
           <Text
             style={{
               textAlign: "center",

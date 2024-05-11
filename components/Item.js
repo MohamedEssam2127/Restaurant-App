@@ -58,7 +58,8 @@ export default function Item({id}) {
             name: item.name,
             price: item.price,
             counter: counter,
-            id:item.id
+            id:item.id,
+            photo :item.photo
           });
         }
         alert("add successfully");
@@ -75,8 +76,7 @@ export default function Item({id}) {
         <FontAwesome name="chevron-left" size={30} color="white" style={styles.backbtn} />
         </TouchableOpacity>
         <View style={styles.Container}>
-          
-      <Text style={styles.Header}> {item.name}</Text>
+      <Text style={styles.Header}>{item.name}</Text>
       <Text style={styles.category}> {item.category}</Text>
       <ScrollView>
       <Text

@@ -40,7 +40,7 @@ export default function CartItem({ item ,ondelete}) {
   }, [counter])
   return (
     <View style={styles.item}>
-      <Image source={pizza} style={styles.image} />
+      <Image source={{uri:item.photo}} style={styles.image} />
       <View style={styles.subcontainer}>
         <View style={{ paddingLeft: 10, width: '50%' }}>
           <Text style={styles.ProductName}>{item.name}</Text>
